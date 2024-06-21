@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Listado de Turnos</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="./index.html">Clínica</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Pacientes
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="./get_pacientes.html">Listar</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Odontólogos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="./get_odontologos.html">Listar</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Turnos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="./get_turnos.html">Listar</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex ms-auto" action="/logout" method="post">
+                <button type="submit" class="btn btn-outline-danger">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1>Gestión de Turnos</h1>
+
+    <!-- Botón para mostrar el formulario de agregar turno -->
+    <div class="text-end">
+        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addTurnoModal">
+            <i class="bi bi-plus"></i> Agregar Turno
+        </button>
+    </div>
+
+    <!-- Tabla de turnos -->
+    <div class="table-responsive mt-4">
+        <table id="turnoTable" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Paciente</th>
+                <th>Odontólogo</th>
+                <th>Fecha y Hora</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="turnoTableBody">
+            <!-- Contenido generado dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para agregar un nuevo turno -->
+<div class="modal fade" id="addTurnoModal" tabindex="-1" aria-labelledby="addTurnoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTurnoModalLabel">Agregar Turno</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add_turno_form">
+                    <div class="form-group">
+                        <label for="paciente_id">Paciente:</label>
+                        <input type="number" class="form-control" id="paciente_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="odontologo_id">Odontólogo:</label>
+                        <input type="number" class="form-control" id="odontologo_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha">Fecha y Hora:</label>
+                        <input type="datetime-local" class="form-control" id="fecha" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </form>
+                <div id="response_add" style="display:none; margin:10px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal para actualizar un turno -->
+<div class="modal fade" id="updateTurnoModal" tabindex="-1" aria-labelledby="updateTurnoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateTurnoModalLabel">Actualizar Turno</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="update_turno_form">
+                    <input type="hidden" id="turno_id">
+                    <div class="form-group">
+                        <label for="update_paciente_id">Paciente:</label>
+                        <input type="number" class="form-control" id="update_paciente_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="update_odontologo_id">Odontólogo:</label>
+                        <input type="number" class="form-control" id="update_odontologo_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="update_fecha">Fecha y Hora:</label>
+                        <input type="datetime-local" class="form-control" id="update_fecha" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                </form>
+                <div id="response_update" style="display:none; margin:10px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="/js/get_turnos.js"></script>
+<script type="text/javascript" src="/js/update_turnos.js"></script>
+<script type="text/javascript" src="/js/delete_turnos.js"></script>
+<script type="text/javascript" src="/js/add_turnos.js"></script>
+</body>
+</html>
